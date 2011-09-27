@@ -75,7 +75,7 @@ namespace X264ConversionWrapper
 		public void parse()
 		{
 			String opts = "-i \"" + Filename + "\"";
-			var proc = Shell.run(FFMpegCommand.DEFAULT_COMMAND_PATH, opts);
+			var proc = Shell.Run(FFMpegCommand.DEFAULT_COMMAND_PATH, opts).Process;
 			String output = proc.StandardError.ReadToEnd();
 			Match match = Regex.Match(output, VIDEO_STREAM_PATTERN);
 			m_VCodec = match.Groups["vcodec"].Value;
