@@ -48,9 +48,12 @@ namespace X264ConversionWrapper
 		
 		public String GetCommandString()
 		{
+			return CommandPath + ' ' + GetCommandArgs();
+		}
+		
+		public String GetCommandArgs()
+		{
 			StringBuilder result = new StringBuilder();
-			result.Append(CommandPath);
-			result.Append(' ');
 			result.Append(InputFileName);
 			if (OverwriteFile) 
 			{

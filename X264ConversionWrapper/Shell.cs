@@ -6,6 +6,8 @@ namespace X264ConversionWrapper
 {
 	public class Shell
 	{
+		public static readonly log4net.ILog LOGGER = log4net.LogManager.GetLogger(typeof(Shell));
+
 		public class ShellProcess
 		{
 			public ProcessStartInfo ProcStartInfo { get; set; }
@@ -18,6 +20,7 @@ namespace X264ConversionWrapper
 			
 			private DataReceivedEventHandler m_ErrorDataReceivedEventHandler;
 			public DataReceivedEventHandler ErrorDataReceivedEventHandler { get { return m_ErrorDataReceivedEventHandler; } }
+			
 			
 			public ShellProcess(String cmd, String args)
 			{
@@ -42,7 +45,8 @@ namespace X264ConversionWrapper
 			}
 			
 
-			public ShellProcess(String cmd, String args, DataReceivedEventHandler outputDataReceivedEventHandler, DataReceivedEventHandler errorDataReceivedEventHandler)
+			public ShellProcess(String cmd, String args, DataReceivedEventHandler outputDataReceivedEventHandler,
+				DataReceivedEventHandler errorDataReceivedEventHandler)
 			{
 				ProcStartInfo = new ProcessStartInfo(cmd, args);
 				ProcStartInfo.RedirectStandardError = true;
@@ -83,23 +87,37 @@ namespace X264ConversionWrapper
 		
 		public static ShellProcess Run(String cmd, String args) 
 		{
-			ShellProcess process = new ShellProcess(cmd, args);
-			process.Run();		
-			return process;
+			return RunShellProcess(new ShellProcess(cmd, args));
 		}
 		
-		public static ShellProcess Run(String cmd, String args, DataReceivedEventHandler outputDataReceivedEventHandler)
+		public static ShellProcess Run(String cmd, String args, 
+			DataReceivedEventHandler outputDataReceivedEventHandler)
 		{
-			ShellProcess process = new ShellProcess(cmd, args, outputDataReceivedEventHandler);
-			process.Run();
-			return process;
+			return RunShellProcess(new ShellProcess(
+				cmd, args, outputDataReceivedEventHandler));
 		}
 		
-		public static ShellProcess Run(String cmd, String args, DataReceivedEventHandler outputDataReceivedEventHandler, DataReceivedEventHandler errorDataReceivedEventHandler)
+		public static ShellProcess Run(String cmd, String args,
+			DataReceivedEventHandler outputDataReceivedEventHandler, 
+			DataReceivedEventHandler errorDataReceivedEventHandler)
 		{
-			ShellProcess process = new ShellProcess(cmd, args, outputDataReceivedEventHandler, errorDataReceivedEventHandler);
-			process.Run();
-			return process;
+			return RunShellProcess(new ShellProcess(
+				cmd, args, outputDataReceivedEventHandler, errorDataReceivedEventHandler));
+
+		}
+		
+		public static ShellProcess RunShellProcess(ShellProcess shProcess)
+		{
+
+			if (LOGGER.IsDebugEnabled)
+			{
+				LOGGER.DebugFormat("Running Command: {0} {1}",
+					shProcess.ProcStartInfo.FileName,
+					shProcess.ProcStartInfo.Arguments);
+			}
+
+			shProcess.Run();
+			return shProcess;
 		}
 	}
 }

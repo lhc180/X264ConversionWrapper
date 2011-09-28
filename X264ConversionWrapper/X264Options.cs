@@ -6,7 +6,7 @@ namespace X264ConversionWrapper
 	{
 		public const int DEFAULT_PASS = 1;
 		public const int DEFAULT_BIT_RATE = 1000;
-		public const X264Presets DEFAULT_PRESET = X264Presets.Medium;
+		public const X264Presets DEFAULT_PRESET = X264Presets.Slow;
 		
 		public X264Options ()
 		{

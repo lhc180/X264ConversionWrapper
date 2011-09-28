@@ -5,9 +5,21 @@ namespace X264ConversionWrapper
 {
 	public class SourceInfo
 	{
+		[Serializable()]
+		public class SourceInfoParsingException : Exception
+		{
+			public SourceInfoParsingException() {}
+			public SourceInfoParsingException(String message) : base (message) {}
+			public SourceInfoParsingException(String message, Exception inner) : base (message, inner) {}
+			public SourceInfoParsingException(System.Runtime.Serialization.SerializationInfo info,
+				System.Runtime.Serialization.StreamingContext context) : base (info, context) { }
+		}
+		
 		public const String VIDEO_STREAM_PATTERN = @"Stream .*?: Video: (?<vcodec>.*?),.*?, (?<vwidth>\d+)x(?<vheight>\d+).*?, (?<vbitrate>.*?) kb/s,";
 		public const String DURATION_PATTERN = @"Duration: (?<duration>.*?),";
 		public const String AUDIO_STREAM_PATTERN = @"Stream .*?: Audio: (?<acodec>.*?), .*, (?<abitrate>.*?) kb/s";
+		
+		private static readonly log4net.ILog LOGGER = log4net.LogManager.GetLogger(typeof (SourceInfo));
 		
 		public String Filename { get; set; }
 		public String VCodec
@@ -75,21 +87,41 @@ namespace X264ConversionWrapper
 		public void parse()
 		{
 			String opts = "-i \"" + Filename + "\"";
+
 			var proc = Shell.Run(FFMpegCommand.DEFAULT_COMMAND_PATH, opts).Process;
+			proc.WaitForExit();
 			String output = proc.StandardError.ReadToEnd();
-			Match match = Regex.Match(output, VIDEO_STREAM_PATTERN);
-			m_VCodec = match.Groups["vcodec"].Value;
-			m_VWidth = Int32.Parse(match.Groups["vwidth"].Value);	
-			m_VHeight = Int32.Parse(match.Groups["vheight"].Value);
-			m_VBitRate = Int32.Parse(match.Groups["vbitrate"].Value);	
-
-			match = Regex.Match(output, DURATION_PATTERN);
-
-			parseDuration(match.Groups["duration"].Value);
 			
-			match = Regex.Match(output, AUDIO_STREAM_PATTERN);
-			m_ACodec = match.Groups["acodec"].Value;
-			m_ABitRate = Int32.Parse(match.Groups["abitrate"].Value);
+			if (LOGGER.IsDebugEnabled)
+			{
+				LOGGER.Debug("Command Output: \n" + output);
+			}
+			Match match = Regex.Match(output, VIDEO_STREAM_PATTERN);
+		
+			if (match.Success)
+			{
+				m_VCodec = match.Groups["vcodec"].Value;
+				m_VWidth = Int32.Parse(match.Groups["vwidth"].Value);	
+				m_VHeight = Int32.Parse(match.Groups["vheight"].Value);
+				m_VBitRate = Int32.Parse(match.Groups["vbitrate"].Value);	
+	
+				match = Regex.Match(output, DURATION_PATTERN);
+	
+				parseDuration(match.Groups["duration"].Value);
+				
+				match = Regex.Match(output, AUDIO_STREAM_PATTERN);
+				m_ACodec = match.Groups["acodec"].Value;
+				m_ABitRate = Int32.Parse(match.Groups["abitrate"].Value);
+			}
+			else
+			{
+				String [] lines = output.Split('\n');
+				if (lines.Length > 1 && lines[lines.Length -2].StartsWith(Filename + ":"))
+				{
+					throw new SourceInfoParsingException(lines[lines.Length - 2]);
+				}
+			}
+
 		}
 		
 		private void parseDuration(String durationStr)

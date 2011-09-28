@@ -33,6 +33,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\MONO\log4net\log4net-1.2.10\bin\mono\2.0\release\log4net.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
@@ -46,6 +50,10 @@
     <Compile Include="Shell.cs" />
     <Compile Include="SourceInfo.cs" />
     <Compile Include="X264Converter.cs" />
+    <Compile Include="LoggerInitializer.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <None Include="log.conf.sample" />
+  </ItemGroup>
 </Project>

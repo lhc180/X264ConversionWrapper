@@ -1,0 +1,16 @@
+<log4net>
+    <!-- Console is set to be a ConsoleAppender -->
+    <appender name="Console" type="log4net.Appender.ConsoleAppender">
+
+        <!-- Console uses PatternLayout -->
+        <layout type="log4net.Layout.PatternLayout">
+            <conversionPattern value="%-4timestamp [%thread] %-5level %logger %ndc - %message%newline" />
+        </layout>
+    </appender>
+    
+    <!-- Set root logger level to DEBUG and its only appender to Console -->
+    <root>
+        <level value="DEBUG" />
+        <appender-ref ref="Console" />
+    </root>
+</log4net>
