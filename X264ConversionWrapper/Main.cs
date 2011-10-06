@@ -12,8 +12,12 @@ namespace X264ConversionWrapper
 			
 			try
 			{
-				X264Converter converter = new X264Converter("/home/grerlrr/sample.wmv");
+				X264Converter converter = new X264Converter("/home/grerlrr/sample.avi");
 				converter.Convert();
+				foreach (String output in converter.LastCommandOutputs)
+				{
+					Console.WriteLine(output);
+				}
 			}
 			catch (SourceInfo.SourceInfoParsingException ex)
 			{

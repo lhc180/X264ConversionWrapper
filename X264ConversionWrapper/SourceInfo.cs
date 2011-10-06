@@ -16,7 +16,8 @@ namespace X264ConversionWrapper
 		}
 		
 		public const String VIDEO_STREAM_PATTERN = @"Stream .*?: Video: (?<vcodec>.*?),.*?, (?<vwidth>\d+)x(?<vheight>\d+).*?, (?<vbitrate>.*?) kb/s,";
-		public const String DURATION_PATTERN = @"Duration: (?<duration>.*?),";
+		public const String VIDEO_STREAM_PATTERN_FALLBACK = @"Stream .*?: Video: (?<vcodec>.*?),.*?, (?<vwidth>\d+)x(?<vheight>\d+) ";
+		public const String DURATION_PATTERN = @"Duration: (?<duration>.*?), .*?, bitrate: (?<bitrate>\d+) kb/s";
 		public const String AUDIO_STREAM_PATTERN = @"Stream .*?: Audio: (?<acodec>.*?), .*, (?<abitrate>.*?) kb/s";
 		
 		private static readonly log4net.ILog LOGGER = log4net.LogManager.GetLogger(typeof (SourceInfo));
@@ -92,36 +93,66 @@ namespace X264ConversionWrapper
 			proc.WaitForExit();
 			String output = proc.StandardError.ReadToEnd();
 			
+			/*
 			if (LOGGER.IsDebugEnabled)
 			{
 				LOGGER.Debug("Command Output: \n" + output);
 			}
-			Match match = Regex.Match(output, VIDEO_STREAM_PATTERN);
-		
+			*/
+			Match match = Regex.Match(output, DURATION_PATTERN);
+			
 			if (match.Success)
 			{
-				m_VCodec = match.Groups["vcodec"].Value;
-				m_VWidth = Int32.Parse(match.Groups["vwidth"].Value);	
-				m_VHeight = Int32.Parse(match.Groups["vheight"].Value);
-				m_VBitRate = Int32.Parse(match.Groups["vbitrate"].Value);	
-	
-				match = Regex.Match(output, DURATION_PATTERN);
-	
 				parseDuration(match.Groups["duration"].Value);
+				int duraionBitrate = Int32.Parse(match.Groups["bitrate"].Value);
 				
-				match = Regex.Match(output, AUDIO_STREAM_PATTERN);
+				match = Regex.Match(output, VIDEO_STREAM_PATTERN);
+				if (match.Success)
+				{
+					m_VCodec = match.Groups["vcodec"].Value;
+					m_VWidth = Int32.Parse(match.Groups["vwidth"].Value);	
+					m_VHeight = Int32.Parse(match.Groups["vheight"].Value);
+					m_VBitRate = Int32.Parse(match.Groups["vbitrate"].Value);						
+				}
+				else
+				{
+					match = Regex.Match(output, VIDEO_STREAM_PATTERN_FALLBACK);
+					if (match.Success)
+					{
+						m_VCodec = match.Groups["vcodec"].Value;
+						m_VWidth = Int32.Parse(match.Groups["vwidth"].Value);	
+						m_VHeight = Int32.Parse(match.Groups["vheight"].Value);
+						m_VBitRate = duraionBitrate;
+					}
+					else
+					{
+						String [] lines = output.Split('\n');
+						if (lines.Length > 1 && lines[lines.Length -2].StartsWith(Filename + ":"))
+						{
+							throw new SourceInfoParsingException(lines[lines.Length - 2]);
+						}
+						else
+						{
+							throw new SourceInfoParsingException("Invalid Video Stream String");
+						}
+					}
+				}
+			} 
+			else
+			{
+				throw new SourceInfoParsingException("Invalid Duration String");
+			}
+			
+			match = Regex.Match(output, AUDIO_STREAM_PATTERN);
+			if (match.Success)
+			{
 				m_ACodec = match.Groups["acodec"].Value;
 				m_ABitRate = Int32.Parse(match.Groups["abitrate"].Value);
 			}
 			else
 			{
-				String [] lines = output.Split('\n');
-				if (lines.Length > 1 && lines[lines.Length -2].StartsWith(Filename + ":"))
-				{
-					throw new SourceInfoParsingException(lines[lines.Length - 2]);
-				}
+				throw new SourceInfoParsingException("Invalid Audio Stream String");
 			}
-
 		}
 		
 		private void parseDuration(String durationStr)

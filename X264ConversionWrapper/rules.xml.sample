@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Rules>
-	<Video>
-      <!-- <VRule SourceVWidth="1920" SourceVHeight="1080" SourceBitRate="0" TargetSizeRatio="1" VBitRate="1500" Quit="True"/> -->
-	  <VRule SourceVWidth="1280" SourceVHeight="720" SourceBitRate="1500" TargetSizeRatio="1" VBitRate="1500" Quit="True"/>
-	  <VRule SourceVWidth="1280" SourceVHeight="720" SourceBitRate="800" TargetSizeRatio="0.7" VBitRate="0.5" Quit="False"/>
-	  <VRule SourceVWidth="1280" SourceVHeight="720" SourceBitRate="400" TargetSizeRatio="0.5" VBitRate="0.75" Quit="False"/>
-	  <VRule SourceVWidth="852" SourceVHeight="480" SourceBitRate="800" TargetSizeRatio="1" VBitRate="800" Quit="False"/>
-	  <VRule SourceVWidth="852" SourceVHeight="480" SourceBitRate="400" TargetSizeRatio="0.7" VBitRate="400" Quit="False"/>
-	  <VRule SourceVWidth="0" SourceVHeight="0" SourceBitRate="0" TargetSizeRatio="1" VBitRate="0.5" Quit="False"/>
-	</Video>
-	<Audio>
-	  <ARule SourceBitRate="180" ABitRate="128" />
-	  <ARule SourceBitRate="128" ABitRate="64" />
-	</Audio>
+	<!-- <VRule SourceVWidth="1920" SourceVHeight="1080" SourceBitRate="0" TargetSizeRatio="1" VBitRate="1500" Quit="True"/> -->
+	<VRule SourceVWidth="1280" SourceVHeight="720" SourceBitRate="1500" TargetSizeRatio="1" VBitRate="1500" Quit="True"/>
+	<VRule SourceVWidth="1280" SourceVHeight="720" SourceBitRate="800" TargetSizeRatio="0.7" VBitRate="0.5" Quit="False"/>
+	<VRule SourceVWidth="1280" SourceVHeight="720" SourceBitRate="400" TargetSizeRatio="0.5" VBitRate="0.75" Quit="False"/>
+	<VRule SourceVWidth="852" SourceVHeight="480" SourceBitRate="800" TargetSizeRatio="1" VBitRate="800" Quit="False"/>
+	<VRule SourceVWidth="852" SourceVHeight="480" SourceBitRate="400" TargetSizeRatio="0.7" VBitRate="400" Quit="False"/>
+	<VRule SourceVWidth="0" SourceVHeight="0" SourceBitRate="0" TargetSizeRatio="1" VBitRate="0.5" Quit="False"/>
+	<ARule SourceBitRate="180" ABitRate="128" />
+	<ARule SourceBitRate="128" ABitRate="64" />
 </Rules>
+ffmpeg -i /home/grerlrr/sample.avi -y -vcodec libx264 -preset slow -x264opts pass=1:bitrate=290 -f rawvideo /dev/null

@@ -54,6 +54,7 @@ namespace X264ConversionWrapper
 		public String GetCommandArgs()
 		{
 			StringBuilder result = new StringBuilder();
+			result.Append("-i ");
 			result.Append(InputFileName);
 			if (OverwriteFile) 
 			{
