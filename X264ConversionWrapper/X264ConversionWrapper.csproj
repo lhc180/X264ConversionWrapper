@@ -37,6 +37,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\MONO\log4net\log4net-1.2.10\bin\mono\2.0\release\log4net.dll</HintPath>
     </Reference>
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
@@ -55,5 +57,6 @@
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <None Include="log.conf.sample" />
+    <None Include="rules.xml.sample" />
   </ItemGroup>
 </Project>

@@ -1,5 +1,6 @@
 using System;
 using System.Threading;
+using System.Data.Linq;
 
 namespace X264ConversionWrapper
 {
@@ -18,6 +19,7 @@ namespace X264ConversionWrapper
 			{
 				Console.WriteLine(ex.Message);
 			}
+			
 		}
 		
 	}

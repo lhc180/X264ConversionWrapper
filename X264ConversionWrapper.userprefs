@@ -1,9 +1,11 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="X264ConversionWrapper/Shell.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Release|x86" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="X264ConversionWrapper/rules.xml.sample">
     <Files>
-      <File FileName="X264ConversionWrapper/X264Converter.cs" Line="31" Column="5" />
-      <File FileName="X264ConversionWrapper/Shell.cs" Line="13" Column="42" />
+      <File FileName="X264ConversionWrapper/X264Converter.cs" Line="111" Column="6" />
+      <File FileName="X264ConversionWrapper/LoggerInitializer.cs" Line="12" Column="34" />
+      <File FileName="X264ConversionWrapper/rules.xml.sample" Line="14" Column="47" />
+      <File FileName="X264ConversionWrapper/X264Options.cs" Line="32" Column="28" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
